@@ -43,7 +43,13 @@ header.dark {
   font-weight: bold;
   font-size: 1.2rem;
 }
-
+.logo-img {
+  height: 40px;   /* ajusta según tu diseño */
+  width: auto;
+  margin-right: 8px;
+  vertical-align: middle;
+  border-radius: 50%;
+}
 .brand .logo {
   display: inline-block;
   width: 32px;

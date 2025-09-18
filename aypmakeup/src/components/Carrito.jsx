@@ -47,6 +47,12 @@ export default function Carrito({ onClose }) {
 
     const totalGeneral = items.reduce((acc, item) => acc + item.total, 0);
 
+    // 👉 limpiar carrito
+    const limpiarCarrito = () => {
+        sessionStorage.removeItem("carrito");
+        setItems([]);
+        setStep(1); // volvemos al primer paso
+    };
     // Generar mensaje para WhatsApp
     const generarMensaje = () => {
         let mensaje = `*¡Nuevo Pedido!*\n\n *Fecha: ${fecha}*\n *Hora: ${hora}*\n\n`;
@@ -73,19 +79,26 @@ export default function Carrito({ onClose }) {
                 {/* Paso 1: Carrito */}
                 {step === 1 && (
                     <>
-                        {items.length === 0 ? (
-                            <p>No hay productos en el carrito.</p>
-                        ) : (
-                            <ul>
-                                {items.map((item) => (
-                                    <li key={item.id}>
-                                        {item.nombre} - 💲{item.precio} x {item.cantidad} ={" "}
-                                        <strong>💲{item.total}</strong>
-                                    </li>
-                                ))}
-                            </ul>
-                        )}
-                        <h3>Total: 💲{totalGeneral}</h3>
+                        <p>Aqui veras los productos que agregaste al carrito.</p>
+                        <div className="productos">
+
+                            {items.length === 0 ? (
+                                <p>No hay productos en el carrito.</p>
+                            ) : (
+                                <ul>
+                                    {items.map((item) => (
+                                        <li key={item.id}>
+                                            {item.nombre} - 💲{item.precio} x {item.cantidad} ={" "}
+                                            <strong>💲{item.total}</strong>
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}
+                            <div className="total">
+                                <h3>Total: 💲{totalGeneral}</h3>
+                            </div>
+
+                        </div>
                     </>
                 )}
 
@@ -93,6 +106,7 @@ export default function Carrito({ onClose }) {
                 {step === 2 && (
                     <form onSubmit={handleSubmit} className="form-cliente">
                         <h3>Datos del cliente</h3>
+                        <p>Ingresa tus datos para que nuestro personal pueda contactarte.</p>
                         <input
                             type="text"
                             name="nombre"
@@ -122,7 +136,14 @@ export default function Carrito({ onClose }) {
                             <button type="button" onClick={() => setStep(1)}>
                                 Atrás
                             </button>
-                            <button type="submit">Enviar</button>
+                            <button type="submit" onClick={() => setStep(3)}><a
+                                href={`https://wa.me/${numeroAdmin}?text=${generarMensaje()}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="btn-whatsapp"
+                            >
+                                📲 Enviar por WhatsApp
+                            </a></button>
                         </div>
                     </form>
                 )}
@@ -130,24 +151,18 @@ export default function Carrito({ onClose }) {
                 {/* Paso 3: Confirmación y WhatsApp */}
                 {step === 3 && (
                     <div className="confirmacion">
-                        <h3>✅ Pedido listo para enviar</h3>
+                        <h3>✅ Pedido Enviado</h3>
                         <p>
-                            Presiona el botón de abajo para enviar tu pedido por WhatsApp al
-                            administrador.
+                            Tu pedido a sido enviado con exito. Te contactaremos a la brevedad.
                         </p>
-                        <a
-                            href={`https://wa.me/${numeroAdmin}?text=${generarMensaje()}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="btn-whatsapp"
-                        >
-                            📲 Enviar por WhatsApp
-                        </a>
                     </div>
                 )}
             </section>
 
             <section className="footer">
+                <button onClick={limpiarCarrito} className="btn-limpiar">
+                    Limpiar carrito
+                </button>
                 {step === 1 && items.length > 0 && (
                     <button onClick={() => setStep(2)}>Siguiente</button>
                 )}

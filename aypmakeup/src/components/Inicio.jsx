@@ -11,7 +11,6 @@ function Inicio() {
         { label: "Inicio", href: "/" },
         { label: "Carrito", href: "/carrito" }
     ];
-    console.log(localStorage.getItem("token"));
     const navigate = useNavigate();
     const [showCarrito, setShowCarrito] = useState(false);
 
@@ -27,10 +26,16 @@ function Inicio() {
             <main className="app">
                 <section className="hero">
                     <h1>Bienvenido a A&P Makeup</h1>
-                    <p>Realiza tu compra agregando productos al carrito y enviando el pedido junto con tus datos, y nuestro personal se contactará con usted.</p>
+                    <p>Realiza tu pedido agregando productos al carrito y se enviará por whatsapp para que nuestro personal se comunique con usted.</p>
                     <div className="hero-actions">
                     </div>
                 </section>
+                <div className="marquee">
+                    <div className="marquee-content">
+                        <img className="icono" src="../../public/logorecortado32.png" alt="icono" />
+                        <span>💄 A&P MAKEUP – Donde tu estilo cobra vida 💋</span>
+                    </div>
+                </div>
                 <Tarjetas />
             </main>
             {/* Botón flotante */}<button

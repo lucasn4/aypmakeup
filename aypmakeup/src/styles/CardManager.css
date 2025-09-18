@@ -96,10 +96,12 @@
   font-weight: bold;
   color: #28a745;
 }
+
 .tarjeta-img {
   width: 200px;
   height: 200px;
-  object-fit: cover; /* mantiene proporción */
+  object-fit: cover;
+  /* mantiene proporción */
   border-radius: 10px;
   margin-bottom: 10px;
 }
@@ -109,26 +111,44 @@
   border: 2px solid #ddd;
 }
 
-.card2{
+.card2 {
   margin: 20px auto;
   padding: 20px;
+  height: auto;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
-form input{
-    margin: 20px;
+
+form input {
+  margin: 20px;
 }
-.boton-agregar{
-    margin: 20px;
-    padding: 12px;
-    background: #7c3aed;
-    color: white;
-    font-weight: bold;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background 0.3s;
+
+.boton-agregar {
+  margin: 20px;
+  padding: 12px;
+  background: #7c3aed;
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s;
 }
-.input-cant-carrito{
+
+.boton-eliminar {
+  top: 20px;
+  right: 20px;
+  margin: 20px;
+  padding: 12px;
+  background: #7c3aed;
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.input-cant-carrito {
   border-radius: 20px;
 }

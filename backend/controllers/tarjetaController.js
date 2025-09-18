@@ -21,7 +21,7 @@ export const getTarjetas = async (req, res) => {
 
 // Crear una tarjeta (solo logeados)
 export const createTarjeta = async (req, res) => {
-  const { nombre, precio, stock } = req.body;
+  const { nombre, categoria, precio, stock } = req.body;
   const file = req.file;
 
   try {
@@ -35,13 +35,14 @@ export const createTarjeta = async (req, res) => {
 
     // Guardar en BD
     const [resultDB] = await pool.query(
-      "INSERT INTO tarjeta (nombre, imagen, precio, stock) VALUES (?, ?, ?, ?)",
-      [nombre, result.secure_url, precio, stock]
+      "INSERT INTO tarjeta (nombre, categoria, imagen, precio, stock) VALUES (?, ?, ?, ?, ?)",
+      [nombre, categoria, result.secure_url, precio, stock]
     );
 
     res.json({
       idtarjeta: resultDB.insertId,
       nombre,
+      categoria,
       imagen: result.secure_url,
       precio,
       stock,
@@ -49,5 +50,21 @@ export const createTarjeta = async (req, res) => {
   } catch (err) {
     console.error("Error al crear tarjeta:", err);
     res.status(500).json({ error: "Error al crear tarjeta" });
+  }
+};
+
+// Editar tarjeta
+
+
+// Borrar tarjeta
+export const deleteTarjeta = async (req, res) => {
+  const { id } = req.params;
+  try {
+    await pool.query("DELETE FROM tarjeta WHERE idtarjeta = ?", [id]);
+    res.json({ success: true });
+    console.log("Tarjeta eliminada");
+  } catch (err) {
+    res.status(500).json({ error: "Error al eliminar tarjeta" });
+    console.error("Error al eliminar tarjeta:", err);
   }
 };

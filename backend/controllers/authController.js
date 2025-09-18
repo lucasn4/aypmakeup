@@ -37,7 +37,6 @@ export const login = async (req, res) => {
         }
 
         const user = rows[0];
-        console.log("user:", user);
         const validPassword = await bcrypt.compare(contraseña, user.contraseña_admin);
 
         if (!validPassword) {

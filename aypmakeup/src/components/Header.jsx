@@ -44,21 +44,15 @@ export default function Header({ brand = "MiApp", links = [], cta, onCtaClick })
     <header className={`header ${isDark ? "dark" : ""}`}>
       <div className="header-container">
         <Link to="/" className="brand">
-          <span className="logo"></span>
+        <img
+          src="../../public/logorecortado32.png"
+          alt="Logo"
+          className="logo-img"
+        />
           <span>{brand}</span>
         </Link>
 
-        <nav className="nav-desktop">
-          {links.map((l) => (
-            <Link
-              key={l.href}
-              to={l.href}
-              className={`nav-link ${pathname === l.href ? "active" : ""}`}
-            >
-              {l.label}
-            </Link>
-          ))}
-        </nav>
+        
 
         <div className="actions">
           <button onClick={toggleTheme} className="theme-toggle">
