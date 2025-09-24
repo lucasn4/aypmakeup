@@ -4,6 +4,8 @@ USE ayp;
 -- 🔴 Eliminar tablas si existen
 DROP TABLE IF EXISTS Administradores;
 DROP TABLE IF EXISTS tarjeta;
+DROP TABLE IF EXISTS tarjeta_imagen;
+DROP TABLE IF EXISTS filtro;
 
 CREATE TABLE Administradores (
     id_admin INT PRIMARY KEY AUTO_INCREMENT,
@@ -15,10 +17,15 @@ CREATE TABLE Administradores (
 CREATE TABLE tarjeta (
   idtarjeta INT AUTO_INCREMENT PRIMARY KEY,
   nombre VARCHAR(100) NOT NULL,
-  imagen TEXT, -- podés guardar url o base64, lo más liviano es url
   categoria VARCHAR(100) NOT NULL,
   precio DECIMAL(10,2) NOT NULL,
   stock INT NOT NULL
+);
+CREATE TABLE tarjeta_imagen (
+  idimagen INT AUTO_INCREMENT PRIMARY KEY,
+  idtarjeta INT NOT NULL,
+  url_imagen TEXT NOT NULL,
+  FOREIGN KEY (idtarjeta) REFERENCES tarjeta(idtarjeta) ON DELETE CASCADE
 );
 CREATE TABLE filtro (
   idfiltro INT AUTO_INCREMENT PRIMARY KEY,
@@ -26,4 +33,5 @@ CREATE TABLE filtro (
 );
 SELECT * FROM Administradores;
 SELECT * FROM tarjeta;
+SELECT * FROM tarjeta_imagen;
 SELECT * FROM filtro;

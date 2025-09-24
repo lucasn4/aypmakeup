@@ -3,7 +3,7 @@ import "../styles/header.css";
 import { Link, useNavigate } from "react-router-dom";
 import { UserContext } from "../context/UserContext";
 
-export default function Header({ brand = "MiApp", links = [], cta, onCtaClick }) {
+export default function Header({ brand = "MiApp", cta, onCtaClick }) {
   const [open, setOpen] = useState(false);
   const [isDark, setIsDark] = useState(false);
 
@@ -33,7 +33,6 @@ export default function Header({ brand = "MiApp", links = [], cta, onCtaClick })
   const navigate = useNavigate();
   const { user, logoutUser } = useContext(UserContext);
 
-  // Función para manejar logout y cerrar menú si está abierto
   const handleLogout = () => {
     logoutUser();
     setOpen(false);
@@ -44,15 +43,13 @@ export default function Header({ brand = "MiApp", links = [], cta, onCtaClick })
     <header className={`header ${isDark ? "dark" : ""}`}>
       <div className="header-container">
         <Link to="/" className="brand">
-        <img
-          src="../../public/logorecortado32.png"
-          alt="Logo"
-          className="logo-img"
-        />
+          <img
+            src="../../public/logorecortado32.png"
+            alt="Logo"
+            className="logo-img"
+          />
           <span>{brand}</span>
         </Link>
-
-        
 
         <div className="actions">
           <button onClick={toggleTheme} className="theme-toggle">
@@ -70,8 +67,16 @@ export default function Header({ brand = "MiApp", links = [], cta, onCtaClick })
             )
           ) : (
             <>
-              <span className="user-name">{user.nombre} {user.apellido}</span>
-              <button type="button" className="cta" onClick={() => navigate("/registro")}>Registro</button>
+              <span className="user-name">
+                {user.nombre} {user.apellido}
+              </span>
+              <button
+                type="button"
+                className="cta"
+                onClick={() => navigate("/registro")}
+              >
+                Registro
+              </button>
               <button className="cta" onClick={handleLogout}>
                 Salir
               </button>
@@ -97,44 +102,61 @@ export default function Header({ brand = "MiApp", links = [], cta, onCtaClick })
             </button>
           </div>
 
+          {/* 👇 Bienvenida si está logueado */}
+          {user && (
+            <div className="drawer-user">
+              <p>👋 Bienvenido</p>
+              <strong>
+                {user.nombre} {user.apellido}
+              </strong>
+            </div>
+          )}
+
           <div className="drawer-links">
-            {links.map((l) => (
+            <Link
+              to="/"
+              className={`drawer-link ${pathname === "/" ? "active" : ""}`}
+              onClick={() => setOpen(false)}
+            >
+              Inicio
+            </Link>
+
+            {!user ? (
               <Link
-                key={l.href}
-                to={l.href}
-                className={`drawer-link ${pathname === l.href ? "active" : ""}`}
+                to="/login"
+                className={`drawer-link ${pathname === "/login" ? "active" : ""}`}
                 onClick={() => setOpen(false)}
               >
-                {l.label}
+                Login
               </Link>
-            ))}
+            ) : (
+              <>
+                <Link
+                  to="/registro"
+                  className={`drawer-link ${
+                    pathname === "/registro" ? "active" : ""
+                  }`}
+                  onClick={() => setOpen(false)}
+                >
+                  Registro
+                </Link>
+                <button
+                  className="drawer-link"
+                  onClick={() => {
+                    handleLogout();
+                    setOpen(false);
+                  }}
+                >
+                  Salir
+                </button>
+              </>
+            )}
           </div>
 
           <div className="drawer-actions">
             <button onClick={toggleTheme} className="theme-toggle">
               {isDark ? "☀️" : "🌙"}
             </button>
-
-            {!user ? (
-              cta?.label && (
-                <button
-                  className="cta"
-                  onClick={() => {
-                    setOpen(false);
-                    navigate("/login");
-                  }}
-                >
-                  {cta.label}
-                </button>
-              )
-            ) : (
-              <>
-                <span className="user-name">{user.nombre} {user.apellido}</span>
-                <button className="cta" onClick={handleLogout}>
-                  Salir
-                </button>
-              </>
-            )}
           </div>
         </div>
       )}

@@ -139,6 +139,26 @@ html.dark .secondary {
   text-align: center;
   height: auto;
 }
+.imagenes-container {
+  display: flex;
+  gap: 5px;
+  overflow-x: auto;
+  max-width: 250px;
+}
+
+.tarjeta-img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+.tarjeta-info{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
 
 html.dark .card {
   box-shadow: 0 6px 18px rgba(2,4,10,0.6);
@@ -177,15 +197,23 @@ html.dark .card {
   height: 40px;
 }
 
+/* Estilos normales en desktop */
 .filtros{
   display:flex;
   flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;  
+  gap: 10px;
+  margin: 10px 0;
 }
 .filtros button{
   background-color: #24153f;
 }
 .filtro-item{
   margin: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
 }
 @keyframes scroll {
   from {
@@ -246,4 +274,73 @@ html.dark .card {
   border: none;
   font-size: 2rem;
   cursor: pointer;
+}
+/* Estilos base */
+.filtros-container {
+  position: relative;
+}
+
+.hamburger {
+  display: none;
+  font-size: 2rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+/* 🔹 Responsive: menú hamburguesa */
+@media (max-width: 640px) {
+  .hamburger {
+    display: block;
+    position: relative;
+    z-index: 1001;
+  }
+
+  .filtros {
+    display: none;
+    position: absolute;
+    top: 40px;
+    left: 0;
+    right: 0;
+    background: gray;
+    padding: 10px;
+    flex-direction: column;
+    gap: 10px;
+    border-radius: 8px;
+    z-index: 1000;
+  }
+
+  .filtros.open {
+    display: flex;
+  }
+
+  .filtros button {
+    color: white;
+    background: #0d1924;
+    border: none;
+    padding: 8px;
+    border-radius: 5px;
+    text-align: left;
+    width: 100%;
+  }
+
+  .filtros button:hover {
+    background: #666;
+  }
+
+  .filtro-item {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .filtro-item button {
+    flex: 1;
+  }
+
+  .filtro-item button:nth-child(2),
+  .filtro-item button:nth-child(3) {
+    max-width: 40px;
+    flex: none;
+  }
 }

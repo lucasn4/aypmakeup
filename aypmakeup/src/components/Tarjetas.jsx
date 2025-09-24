@@ -1,7 +1,9 @@
 import React, { useEffect, useState, useContext } from "react";
 import CrearTarjeta from "./CrearTarjeta";
 import CrearFiltro from "./CrearFiltro";
+import CarruselImagenes from "./CarruselImagenes";
 import BorrarTarjeta from "./BorrarTarjeta";
+import EditarTarjeta from "./EditarTarjeta";
 import "../styles/CardManager.css";
 import { UserContext } from "../context/UserContext";
 import "../App.css";
@@ -13,11 +15,19 @@ export default function Tarjetas() {
   const { user } = useContext(UserContext);
 
   const [cantidades, setCantidades] = useState({});
+  const [menuOpen, setMenuOpen] = useState(false);
+  // 👉 nuevo estado para buscador
+  const [busqueda, setBusqueda] = useState("");
+  const [resultadoBusqueda, setResultadoBusqueda] = useState([]);
+
 
   useEffect(() => {
     fetch("http://192.168.1.4:5000/api/tarjetas")
       .then((res) => res.json())
-      .then(setTarjetas);
+      .then((data) => {
+        setTarjetas(data);
+        setResultadoBusqueda(data); // inicializa con todas
+      });
 
     fetch("http://192.168.1.4:5000/api/filtros")
       .then((res) => res.json())
@@ -32,8 +42,14 @@ export default function Tarjetas() {
     setFiltros((prev) => [nuevo, ...prev]);
   };
 
-  const handleCantidadChange = (id, value) => {
-    setCantidades((prev) => ({ ...prev, [id]: parseInt(value) || 0 }));
+  const handleCantidadChange = (id, value, stock) => {
+    let cantidad = parseInt(value) || 0;
+
+    if (cantidad > stock) {
+      cantidad = stock; // 👈 si pasa el límite, lo ajusta al stock
+    }
+
+    setCantidades((prev) => ({ ...prev, [id]: cantidad }));
   };
 
   const agregarAlCarrito = (tarjeta) => {
@@ -114,9 +130,26 @@ export default function Tarjetas() {
     }
   };
 
+  // 👉 función para ejecutar la búsqueda
+  const buscarTarjetas = () => {
+    if (busqueda.trim() === "") {
+      setResultadoBusqueda(tarjetas); // muestra todo si está vacío
+      return;
+    }
+
+    const filtradas = tarjetas.filter((t) =>
+      t.nombre.toLowerCase().includes(busqueda.toLowerCase())
+    );
+
+    setResultadoBusqueda(filtradas);
+  };
+
+  // 👉 aplicamos filtro por categoría encima del resultado del buscador
   const tarjetasFiltradas = filtroActivo
-    ? tarjetas.filter((t) => t.categoria.toLowerCase() === filtroActivo.toLowerCase())
-    : tarjetas;
+    ? resultadoBusqueda.filter(
+      (t) => t.categoria.toLowerCase() === filtroActivo.toLowerCase()
+    )
+    : resultadoBusqueda;
 
   return (
     <div>
@@ -126,45 +159,79 @@ export default function Tarjetas() {
           <CrearFiltro onFiltroCreado={handleNuevoFiltro} />
         </div>
       )}
+      <div className="buscador-container">
+        <input
+          type="text"
+          placeholder="Buscar producto..."
+          value={busqueda}
+          onChange={(e) => setBusqueda(e.target.value)}
+          className="input-buscador"
+        />
+        <button onClick={buscarTarjetas} className="btn-buscar">🔍</button>
+      </div>
 
-      {/* Botones de filtros */}
-      <div className="filtros">
+      <div className="filtros-container">
         <button
-          className={!filtroActivo ? "activo" : ""}
-          onClick={() => setFiltroActivo(null)}
+          className="hamburger"
+          onClick={() => setMenuOpen(!menuOpen)}
         >
-          Todos
+          ☰
         </button>
-        {filtros.map((f) => (
-          <div key={f.idfiltro} className="filtro-item">
-            <button
-              className={filtroActivo === f.nombre ? "activo" : ""}
-              onClick={() => setFiltroActivo(f.nombre)}
-            >
-              {f.nombre}
-            </button>
-            {user && (
-              <>
-                <button onClick={() => editarFiltro(f)}>✏️</button>
-                <button onClick={() => eliminarFiltro(f.idfiltro)}>🗑️</button>
-              </>
-            )}
-          </div>
-        ))}
+
+        <div className={`filtros ${menuOpen ? "open" : ""}`}>
+          <button
+            className={!filtroActivo ? "activo" : ""}
+            onClick={() => setFiltroActivo(null)}
+          >
+            Todos
+          </button>
+          {filtros.map((f) => (
+            <div key={f.idfiltro} className="filtro-item">
+              <button
+                className={filtroActivo === f.nombre ? "activo" : ""}
+                onClick={() => setFiltroActivo(f.nombre)}
+              >
+                {f.nombre}
+              </button>
+              {user && (
+                <>
+                  <button onClick={() => editarFiltro(f)}>✏️</button>
+                  <button onClick={() => eliminarFiltro(f.idfiltro)}>🗑️</button>
+                </>
+              )}
+            </div>
+          ))}
+        </div>
       </div>
 
       <div className="cards">
         {tarjetasFiltradas.map((t) => (
           <section key={t.idtarjeta} className="card">
-            <article>
+            <article >
               {user && (
-                  <>
-                    <BorrarTarjeta idtarjeta={t.idtarjeta} />
-                  </>
-                )}
+                <>
+                  <BorrarTarjeta idtarjeta={t.idtarjeta} />
+                  <EditarTarjeta
+                    tarjeta={t}
+                    onTarjetaEditada={(editada) =>
+                      setTarjetas((prev) =>
+                        prev.map((tar) =>
+                          tar.idtarjeta === editada.idtarjeta ? editada : tar
+                        )
+                      )
+                    }
+                  />
+                </>
+              )}
             </article>
-            <article>
-              <img src={t.imagen} alt={t.nombre} className="tarjeta-img" />
+            <article className="tarjeta-info">
+              <div className="imagenes-container">
+                {t.imagenes && t.imagenes.length > 0 ? (
+                  <CarruselImagenes imagenes={t.imagenes} nombre={t.nombre} />
+                ) : (
+                  <p>Sin imágenes</p>
+                )}
+              </div>
               <h4>{t.nombre}</h4>
               <p>Categoria: {t.categoria}</p>
               <p>💲 {t.precio}</p>
@@ -172,8 +239,9 @@ export default function Tarjetas() {
               <input
                 type="number"
                 min="1"
+                max={t.stock}
                 value={cantidades[t.idtarjeta] || ""}
-                onChange={(e) => handleCantidadChange(t.idtarjeta, e.target.value)}
+                onChange={(e) => handleCantidadChange(t.idtarjeta, e.target.value, t.stock)}
                 className="input-cant-carrito"
                 placeholder="Cantidad"
               />

@@ -9,7 +9,7 @@ import Carrito from "./Carrito";
 function Inicio() {
     const links = [
         { label: "Inicio", href: "/" },
-        { label: "Carrito", href: "/carrito" }
+        { label: "Login", href: "/login" }
     ];
     const navigate = useNavigate();
     const [showCarrito, setShowCarrito] = useState(false);

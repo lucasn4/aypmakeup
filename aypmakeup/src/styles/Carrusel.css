@@ -1,0 +1,38 @@
+.carrusel {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.carrusel img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+.carrusel-btn {
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  font-size: 20px;
+  padding: 8px;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: background 0.3s ease;
+}
+
+.carrusel-btn:hover {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.carrusel-btn.izq {
+  position: absolute;
+  left: 10px;
+}
+
+.carrusel-btn.der {
+  position: absolute;
+  right: 10px;
+}
