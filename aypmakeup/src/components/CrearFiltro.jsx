@@ -1,6 +1,7 @@
 // CrearFiltro.jsx
 import React, { useState, useContext } from "react";
 import { UserContext } from "../context/UserContext";
+import Swal from 'sweetalert2'
 
 export default function CrearFiltro({ onFiltroCreado }) {
     const [nombre, setNombre] = useState("");
@@ -9,7 +10,11 @@ export default function CrearFiltro({ onFiltroCreado }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!nombre.trim()) {
-            alert("El nombre del filtro es obligatorio");
+            Swal.fire({
+                icon: "info",
+                title: "El nombre del filtro es obligatorio",
+                text: "Agregue un nombre para el filtro",
+            });
             return;
         }
         if (!token) {
@@ -35,7 +40,11 @@ export default function CrearFiltro({ onFiltroCreado }) {
             setNombre("");
         } catch (err) {
             console.error(err);
-            alert("Hubo un error al crear el filtro ❌");
+            Swal.fire({
+                icon: "error",
+                title: "Error ❌",
+                text: "Hubo un error al crear el filtro",
+            });
         }
     };
 

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Swal from 'sweetalert2'
 
 export default function CrearTarjeta({ onTarjetaCreada }) {
   const [nombre, setNombre] = useState("");
@@ -46,7 +47,10 @@ export default function CrearTarjeta({ onTarjetaCreada }) {
       setImagenes([]);
     } catch (err) {
       console.error(err);
-      alert("No se pudo crear la tarjeta ❌");
+      Swal.fire({
+        icon: "Error ❌",
+        title: "No se pudo crear la tarjeta"
+      });
     }
   };
 

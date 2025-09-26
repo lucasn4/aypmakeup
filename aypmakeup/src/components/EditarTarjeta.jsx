@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Swal from 'sweetalert2'
 
 export default function EditarTarjeta({ tarjeta, onTarjetaEditada }) {
   const [editando, setEditando] = useState(false);
@@ -26,7 +27,11 @@ export default function EditarTarjeta({ tarjeta, onTarjetaEditada }) {
       setEditando(false);
     } catch (err) {
       console.error(err);
-      alert("No se pudo editar la tarjeta ❌");
+      Swal.fire({
+        icon: "error",
+        title: "Error ❌",
+        text: "No se pudo editar la tarjeta"
+      });
     }
   };
 
@@ -51,7 +56,11 @@ export default function EditarTarjeta({ tarjeta, onTarjetaEditada }) {
       setImagenes((prev) => prev.filter((img) => img !== url));
     } catch (err) {
       console.error(err);
-      alert("No se pudo eliminar la imagen ❌");
+      Swal.fire({
+        icon: "error",
+        title: "Error ❌",
+        text: "No se pudo eliminar la imagen"
+      });
     }
   };
 

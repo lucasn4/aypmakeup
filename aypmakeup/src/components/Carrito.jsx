@@ -1,7 +1,9 @@
 // Carrito.jsx
 import React, { useEffect, useState } from "react";
 import "../styles/Carrito.css";
+import "../App.css";
 import { LuShoppingCart } from "react-icons/lu";
+import Swal from 'sweetalert2';
 
 export default function Carrito({ onClose }) {
     const ahora = new Date();
@@ -66,6 +68,16 @@ export default function Carrito({ onClose }) {
     };
 
     const numeroAdmin = import.meta.env.VITE_NUM_ADMIN;
+
+    const mensajefinal = () => {
+        limpiarCarrito();
+        onClose();
+        Swal.fire({
+            title: "Tu pedido ha sido enviado con éxito! ¡Gracias por su compra!",
+            text: 'Nos pondremos en contacto a la brevedad.',
+            icon: "success"
+        });
+    }
 
     return (
         <div className="side-panel">
@@ -136,7 +148,7 @@ export default function Carrito({ onClose }) {
                             <button type="button" onClick={() => setStep(1)}>
                                 Atrás
                             </button>
-                            <button type="submit" onClick={() => setStep(3)}><a
+                            <button type="submit" onClick={() => mensajefinal()}><a
                                 href={`https://wa.me/${numeroAdmin}?text=${generarMensaje()}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
