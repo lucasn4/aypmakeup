@@ -45,11 +45,19 @@ export const getTarjetas = async (req, res) => {
 
 // Crear tarjeta con múltiples imágenes
 export const createTarjeta = async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
   const { nombre, categoria, precio, stock } = req.body;
   const files = req.files;
 
   try {
     // 1) Insertar tarjeta
+    if (!nombre || precio <= 0 || stock < 0) {
+      return res.status(400).json({ error: "Datos inválidos" });
+    }
+
     const [resultDB] = await pool.query(
       "INSERT INTO tarjeta (nombre, categoria, precio, stock) VALUES (?, ?, ?, ?)",
       [nombre, categoria, precio, stock]
@@ -63,6 +71,7 @@ export const createTarjeta = async (req, res) => {
       for (const file of files) {
         const result = await cloudinary.uploader.upload(file.path, {
           folder: "tarjetas",
+          transformation: [{ width: 1200, crop: "limit" }],
         });
         fs.unlinkSync(file.path);
 
@@ -131,7 +140,7 @@ export const deleteImagen = async (req, res) => {
     const imagen = rows[0];
 
     // Eliminar de Cloudinary
-    const publicId = imagen.url_imagen.split("/").pop().split(".")[0]; 
+    const publicId = imagen.url_imagen.split("/").pop().split(".")[0];
     try {
       await cloudinary.uploader.destroy(`tarjetas/${publicId}`);
     } catch (cloudErr) {

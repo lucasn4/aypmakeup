@@ -20,8 +20,8 @@ export default function Registro() {
         try {
             const res = await fetch("http://192.168.1.4:5000/api/auth/register", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(form),
+                headers: { "Content-Type": "application/json" },
             });
             const data = await res.json();
             if (res.ok) setMsg("Usuario registrado ✅");

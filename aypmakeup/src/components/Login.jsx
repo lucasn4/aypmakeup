@@ -16,9 +16,9 @@ export default function Login() {
         try {
             const res = await fetch("http://192.168.1.4:5000/api/auth/login", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(form),
-            });
+                headers: { "Content-Type": "application/json" },
+            })
             const data = await res.json();
             if (res.ok) {
                 // Guardamos token y info del usuario en context
@@ -40,7 +40,7 @@ export default function Login() {
                 <input type="text" name="telefono" placeholder="Teléfono" value={form.telefono} onChange={handleChange} required />
                 <input type="password" name="contraseña" placeholder="Contraseña" value={form.contraseña} onChange={handleChange} required />
                 <button type="submit">Ingresar</button>
-                <button type="submit" className="registro-btn" onClick={() => navigate("/")}>Inicio</button>
+                <button type="button" className="registro-btn" onClick={() => navigate("/")}>Inicio</button>
                 {message && <p className="message">{message}</p>}
             </form>
         </div>

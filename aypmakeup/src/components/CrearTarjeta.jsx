@@ -25,6 +25,22 @@ export default function CrearTarjeta({ onTarjetaCreada }) {
     imagenes.forEach((img) => {
       formData.append("imagenes", img); // backend debe recibir como "imagenes"
     });
+    if (precio <= 0) {
+      Swal.fire({
+        title: "Error ❌",
+        text: 'El precio debe ser mayor a 0',
+        icon: "error"
+      });
+      return;
+    }
+    if (stock < 0) {
+      Swal.fire({
+        title: "Error ❌",
+        text: 'El stock no puede ser negativo',
+        icon: "error"
+      });
+      return;
+    }
 
     try {
       const res = await fetch("http://192.168.1.4:5000/api/tarjetas", {
