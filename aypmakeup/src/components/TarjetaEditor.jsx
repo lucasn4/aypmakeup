@@ -22,9 +22,12 @@ export default function TarjetaEditor({ tarjeta, onClose, onUpdated }) {
 
     newFiles.forEach((file) => formData.append("imagenes", file));
 
-    await fetch(`http://localhost:5000/api/tarjetas/${tarjeta.idtarjeta}`, {
+    await fetch(`http://192.168.1.4:5000/api/tarjetas/${tarjeta.idtarjeta}`, {
       method: "PUT",
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      credentials: "include", // 👈 importante para enviar cookies
+      headers: {
+        "Content-Type": "application/json"
+      },
       body: formData,
     });
 

@@ -6,6 +6,7 @@ import tarjetaRoutes from "./routes/tarjetaRoutes.js";
 import filtroRoutes from "./routes/filtroRoutes.js";
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
+import cookieParser from "cookie-parser";
 
 dotenv.config();
 
@@ -18,11 +19,15 @@ const apiLimiter = rateLimit({
 });
 
 const app = express();
+app.use(express.json({ limit: "2mb" }));
+const allowed = ["http://localhost:5173","http://192.168.1.4:5173","https://mi-frontend.com"];
+app.use(cookieParser());
+app.use(cors({
+  origin: allowed,
+  credentials: true, // 👈 necesario para mandar cookies
+}));
 //const allowed = ["https://mi-frontend.com"];
 //app.use(cors({ origin: allowed }));
-app.use(cors());
-app.use(express.json({ limit: "2mb" }));
-
 app.use(helmet());
 app.use('/api/', apiLimiter);
 app.use("/api/auth", authRoutes);

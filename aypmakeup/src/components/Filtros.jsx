@@ -23,9 +23,9 @@ export default function Filtros({ tarjetas, setTarjetasFiltradas }) {
     try {
       const res = await fetch(`http://192.168.1.4:5000/api/filtros/${idfiltro}`, {
         method: "DELETE",
+        credentials: "include", // 👈 importante para enviar cookies
         headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "application/json"
         },
       });
 
@@ -50,9 +50,9 @@ export default function Filtros({ tarjetas, setTarjetasFiltradas }) {
     try {
       const res = await fetch(`http://192.168.1.4:5000/api/filtros/${filtro.idfiltro}`, {
         method: "PUT",
+        credentials: "include", // 👈 importante para enviar cookies
         headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "application/json"
         },
         body: JSON.stringify({ nombre: nuevoNombre }),
       });

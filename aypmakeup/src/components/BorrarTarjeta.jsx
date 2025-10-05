@@ -24,11 +24,10 @@ export default function BorrarTarjeta({ idtarjeta }) {
                 try {
                     const res = await fetch(`http://192.168.1.4:5000/api/tarjetas/borrar/${idtarjeta}`, {
                         method: "DELETE",
+                        credentials: "include", // 👈 importante para enviar cookies
                         headers: {
-                            "Content-Type": "application/json",
-                            Authorization: `Bearer ${localStorage.getItem("token")}`, // token del login
+                            "Content-Type": "application/json"
                         },
-
                     });
                     if (res.ok) {
                         Swal.fire({

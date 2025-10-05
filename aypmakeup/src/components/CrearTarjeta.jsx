@@ -45,8 +45,9 @@ export default function CrearTarjeta({ onTarjetaCreada }) {
     try {
       const res = await fetch("http://192.168.1.4:5000/api/tarjetas", {
         method: "POST",
+        credentials: "include", // 👈 importante para enviar cookies
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`, // 👈 token de admin
+          "Content-Type": "application/json"
         },
         body: formData,
       });

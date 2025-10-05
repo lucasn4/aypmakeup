@@ -24,9 +24,9 @@ export default function CrearFiltro({ onFiltroCreado }) {
         try {
             const res = await fetch("http://192.168.1.4:5000/api/filtros", {
                 method: "POST",
+                credentials: "include", // 👈 importante para enviar cookies
                 headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${localStorage.getItem("token")}`, // 👈 token de admin
+                    "Content-Type": "application/json"
                 },
                 body: JSON.stringify({ nombre }),
             });

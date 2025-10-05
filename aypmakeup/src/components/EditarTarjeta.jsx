@@ -13,9 +13,9 @@ export default function EditarTarjeta({ tarjeta, onTarjetaEditada }) {
     try {
       const res = await fetch(`http://192.168.1.4:5000/api/tarjetas/${tarjeta.idtarjeta}`, {
         method: "PUT",
+        credentials: "include", // 👈 importante para enviar cookies
         headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "application/json"
         },
         body: JSON.stringify({ nombre, categoria, precio, stock }),
       });
@@ -43,9 +43,9 @@ export default function EditarTarjeta({ tarjeta, onTarjetaEditada }) {
         `http://192.168.1.4:5000/api/tarjetas/${tarjeta.idtarjeta}/imagen`,
         {
           method: "DELETE",
+          credentials: "include", // 👈 importante para enviar cookies
           headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "application/json"
           },
           body: JSON.stringify({ url }), // 👈 pasamos la url de la imagen
         }

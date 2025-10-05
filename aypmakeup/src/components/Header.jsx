@@ -33,11 +33,23 @@ export default function Header({ brand = "MiApp", cta, onCtaClick }) {
   const navigate = useNavigate();
   const { user, logoutUser } = useContext(UserContext);
 
-  const handleLogout = () => {
-    logoutUser();
-    setOpen(false);
-    navigate("/");
+  const handleLogout = async () => {
+    try {
+      // Llamamos al backend para borrar la cookie
+      await fetch("http://192.168.1.4:5000/api/auth/logout", {
+        method: "POST",
+        credentials: "include", // 👈 obligatorio para mandar cookies
+      });
+    } catch (err) {
+      console.error("Error cerrando sesión:", err);
+    } finally {
+      // Limpiamos estado en frontend
+      logoutUser();
+      setOpen(false);
+      navigate("/");
+    }
   };
+
 
   return (
     <header className={`header ${isDark ? "dark" : ""}`}>
@@ -133,9 +145,8 @@ export default function Header({ brand = "MiApp", cta, onCtaClick }) {
               <>
                 <Link
                   to="/registro"
-                  className={`drawer-link ${
-                    pathname === "/registro" ? "active" : ""
-                  }`}
+                  className={`drawer-link ${pathname === "/registro" ? "active" : ""
+                    }`}
                   onClick={() => setOpen(false)}
                 >
                   Registro
