@@ -1,37 +1,27 @@
+// src/components/Login.jsx
 import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import "../styles/login.css";
 import { UserContext } from "../context/UserContext";
+import Swal from "sweetalert2";
+import "../styles/login.css";
 
 export default function Login() {
   const [form, setForm] = useState({ telefono: "", contraseña: "" });
-  const [message, setMessage] = useState("");
   const navigate = useNavigate();
   const { loginUser } = useContext(UserContext);
 
-  const handleChange = (e) =>
-    setForm({ ...form, [e.target.name]: e.target.value });
+  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const res = await fetch("http://192.168.1.4:5000/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-        credentials: "include", // 👈 permite recibir cookies httpOnly
-      });
+    const { telefono, contraseña } = form;
 
-      const data = await res.json();
-
-      if (res.ok) {
-        loginUser(data.user);
-        navigate("/");
-      } else {
-        setMessage(data.error || "Error en login ❌");
-      }
-    } catch {
-      setMessage("Error de conexión con el servidor");
+    const res = await loginUser(telefono, contraseña);
+    if (res.ok) {
+      Swal.fire("Bienvenido", "Has iniciado sesión correctamente", "success");
+      navigate("/");
+    } else {
+      Swal.fire("Error", res.error || "Credenciales inválidas", "error");
     }
   };
 
@@ -56,14 +46,7 @@ export default function Login() {
           required
         />
         <button type="submit">Ingresar</button>
-        <button
-          type="button"
-          className="registro-btn"
-          onClick={() => navigate("/")}
-        >
-          Inicio
-        </button>
-        {message && <p className="message">{message}</p>}
+        <button type="button" className="registro-btn" onClick={() => navigate("/")}>Inicio</button>
       </form>
     </div>
   );

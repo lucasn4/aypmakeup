@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 
 export const verifyToken = (req, res, next) => {
   // Tomamos token de cookie segura
-  const token = req.cookies?.token;
+  const token = req.cookies.access_token;
 
   if (!token) return res.status(403).json({ error: "Token requerido" });
 

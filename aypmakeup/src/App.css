@@ -1,12 +1,12 @@
 /* Variables: LIGHT por defecto */
 :root{
-  --bg: #f7fafc;         /* fondo app */
-  --surface: #ffffff;    /* tarjetas / superficies */
-  --text: #0f172a;       /* texto principal */
-  --muted: #6b7280;      /* texto secundario */
-  --primary: #4f46e5;    /* color primario */
-  --primary-contrast: #ffffff;
-  --glass: rgba(255,255,255,0.6);
+  --bg: #071223;
+  --surface: #0d1924;
+  --text: #e6eef8;
+  --muted: #9aa6b2;
+  --primary: #7c5cff;
+  --primary-contrast: #071223;
+  --glass: rgba(10,14,18,0.6);
   --transition: 300ms;
 }
 

@@ -9,17 +9,11 @@ header {
   position: sticky;
   top: 0;
   width: 100%;
-  background: #ffffffcc; /* blanco con transparencia */
+  background: #111111cc; /* blanco con transparencia */
   backdrop-filter: blur(10px);
-  border-bottom: 1px solid #e5e5e5;
+  border-bottom: 1px solid #333;
   z-index: 50;
   font-family: Arial, sans-serif;
-  color: #111111cc;
-}
-
-header.dark {
-  background: #111111cc;
-  border-bottom: 1px solid #333;
   color: #f1f1f1;
 }
 
@@ -68,29 +62,17 @@ header.dark {
   padding: 6px 10px;
   text-decoration: none;
   border-radius: 6px;
-  color: #333;
+  color: #ddd;
   transition: background 0.2s, color 0.2s;
 }
 
 .nav-link:hover {
-  background: #f3f3f3;
-}
-
-.nav-link.active {
-  background: #eee;
-  font-weight: 600;
-}
-
-header.dark .nav-link {
-  color: #ddd;
-}
-
-header.dark .nav-link:hover {
   background: #222;
 }
 
-header.dark .nav-link.active {
+.nav-link.active {
   background: #333;
+  font-weight: 600;
 }
 
 /* Acciones */
@@ -106,6 +88,8 @@ header.dark .nav-link.active {
   cursor: pointer;
   border: 1px solid #ddd;
   background: transparent;
+  border-color: #333;
+  color: #f1f1f1;
   padding: 6px 10px;
   border-radius: 6px;
   font-size: 14px;
@@ -115,26 +99,13 @@ header.dark .nav-link.active {
 .theme-toggle:hover,
 .cta:hover,
 .menu-toggle:hover {
-  background: #f3f3f3;
-}
-
-header.dark .theme-toggle,
-header.dark .cta,
-header.dark .menu-toggle {
-  border-color: #333;
-  color: #f1f1f1;
-}
-
-header.dark .theme-toggle:hover,
-header.dark .cta:hover,
-header.dark .menu-toggle:hover {
   background: #222;
 }
 
 .cta {
   display: none; /* solo desktop */
-  color:#111111cc;
-  border-color: #111111cc;
+  color:white;
+  border-color: grey;
 }
 
 /* Menú móvil */
@@ -144,18 +115,14 @@ header.dark .menu-toggle:hover {
   right: 0;
   width: 280px;
   max-width: 85vw;
-  background: #c8c7c7;
+  background: #111111;
+  border-color: #333;
   border-left: 1px solid #ddd;
   padding: 1rem;
   display: flex;
   flex-direction: column;
   animation: slideIn 0.3s ease forwards;
   z-index: 100;
-}
-
-header.dark .drawer {
-  background: #111111;
-  border-color: #333;
 }
 
 .drawer-header {
@@ -179,35 +146,23 @@ header.dark .drawer {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  color:green;
 }
 
 .drawer-link {
   padding: 8px 10px;
   border-radius: 6px;
   text-decoration: none;
-  color: #333;
+  color: #ddd;
   transition: background 0.2s;
 }
 
 .drawer-link:hover {
-  background: #f3f3f3;
-}
-
-.drawer-link.active {
-  background: #eee;
-  font-weight: 600;
-}
-
-header.dark .drawer-link {
-  color: #ddd;
-}
-
-header.dark .drawer-link:hover {
   background: #222;
 }
 
-header.dark .drawer-link.active {
-  background: #333;
+.drawer-link.active {
+  font-weight: 600;
 }
 
 .drawer-actions {

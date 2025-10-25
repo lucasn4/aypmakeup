@@ -1,60 +1,57 @@
-// controllers/filtroController.js
 import pool from "../config/db.js";
+import sanitizeHtml from "sanitize-html";
+import winston from "winston";
 
-// Obtener todos los filtros (público)
+const logger = winston.createLogger({
+  level: "info",
+  format: winston.format.combine(winston.format.timestamp(), winston.format.json()),
+  transports: [new winston.transports.File({ filename: "logs/app.log" })],
+});
+
 export const getFiltros = async (req, res) => {
   try {
-    const [rows] = await pool.query("SELECT * FROM filtro ORDER BY idfiltro DESC");
+    const [rows] = await pool.query("SELECT * FROM filtro");
     res.json(rows);
   } catch (err) {
-    console.error("Error al obtener filtros:", err);
-    res.status(500).json({ error: "Error al obtener filtros" });
+    logger.error("Error obteniendo filtros:", err.message);
+    res.status(500).json({ error: "Error al obtener los filtros" });
   }
 };
 
-// Crear un filtro (solo admins)
 export const createFiltro = async (req, res) => {
-  const { nombre } = req.body;
-
-  if (!nombre || nombre.trim() === "") {
-    return res.status(400).json({ error: "El nombre es obligatorio" });
-  }
-
   try {
-    const [result] = await pool.query("INSERT INTO filtro (nombre) VALUES (?)", [
-      nombre,
-    ]);
+    const { nombre } = req.body;
+    const cleanName = sanitizeHtml(nombre);
 
-    res.json({
-      idfiltro: result.insertId,
-      nombre,
-    });
+    const [result] = await pool.query("INSERT INTO filtros (nombre) VALUES (?)", [cleanName]);
+    res.json({ id: result.insertId, nombre: cleanName });
   } catch (err) {
-    console.error("Error al crear filtro:", err);
-    res.status(500).json({ error: "Error al crear filtro" });
+    logger.error("Error al crear filtro:", err.message);
+    res.status(500).json({ error: "Error al crear el filtro" });
   }
 };
 
-
-// Editar filtro
 export const updateFiltro = async (req, res) => {
-  const { id } = req.params;
-  const { nombre } = req.body;
   try {
-    await pool.query("UPDATE filtro SET nombre = ? WHERE idfiltro = ?", [nombre, id]);
-    res.json({ idfiltro: id, nombre });
+    const { id } = req.params;
+    const { nombre } = req.body;
+    const cleanName = sanitizeHtml(nombre);
+
+    await pool.query("UPDATE filtros SET nombre = ? WHERE idfiltro = ?", [cleanName, id]);
+    res.json({ message: "Filtro actualizado" });
   } catch (err) {
-    res.status(500).json({ error: "Error al actualizar filtro" });
+    logger.error("Error al actualizar filtro:", err.message);
+    res.status(500).json({ error: "Error al actualizar el filtro" });
   }
 };
 
-// Borrar filtro
 export const deleteFiltro = async (req, res) => {
-  const { id } = req.params;
   try {
-    await pool.query("DELETE FROM filtro WHERE idfiltro = ?", [id]);
-    res.json({ success: true });
+    const { id } = req.params;
+    await pool.query("DELETE FROM filtros WHERE idfiltro = ?", [id]);
+    res.json({ message: "Filtro eliminado" });
   } catch (err) {
-    res.status(500).json({ error: "Error al eliminar filtro" });
+    logger.error("Error al eliminar filtro:", err.message);
+    res.status(500).json({ error: "Error al eliminar el filtro" });
   }
 };

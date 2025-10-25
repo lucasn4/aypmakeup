@@ -3,11 +3,11 @@ import Swal from 'sweetalert2'
 
 export default function EditarTarjeta({ tarjeta, onTarjetaEditada }) {
   const [editando, setEditando] = useState(false);
-  const [nombre, setNombre] = useState(tarjeta.nombre);
-  const [categoria, setCategoria] = useState(tarjeta.categoria);
-  const [precio, setPrecio] = useState(tarjeta.precio);
-  const [stock, setStock] = useState(tarjeta.stock);
-  const [imagenes, setImagenes] = useState(tarjeta.imagenes || []);
+  const [nombre, setNombre] = useState(tarjeta?.nombre || "");
+  const [categoria, setCategoria] = useState(tarjeta?.categoria || "");
+  const [precio, setPrecio] = useState(tarjeta?.precio || 0);
+  const [stock, setStock] = useState(tarjeta?.stock || 0);
+  const [imagenes, setImagenes] = useState(tarjeta?.imagenes || []);
 
   const handleGuardar = async () => {
     try {

@@ -14,6 +14,9 @@ CREATE TABLE Administradores (
     telefono_admin VARCHAR(40) NOT NULL,
     contraseña_admin VARCHAR(255) NOT NULL
 );
+ALTER TABLE Administradores
+ADD COLUMN refresh_token TEXT NULL AFTER contraseña_admin;
+
 CREATE TABLE tarjeta (
   idtarjeta INT AUTO_INCREMENT PRIMARY KEY,
   nombre VARCHAR(100) NOT NULL,
@@ -35,3 +38,32 @@ SELECT * FROM Administradores;
 SELECT * FROM tarjeta;
 SELECT * FROM tarjeta_imagen;
 SELECT * FROM filtro;
+
+INSERT INTO Administradores (nombre_admin,apellido_admin,telefono_admin,contraseña_admin)
+VALUES ('Lucas','Naranjo',3813342620,'abc123');
+
+DELETE FROM Administradores
+WHERE id_admin = 1; 
+
+CREATE TABLE pedidos (
+  idpedido INT AUTO_INCREMENT PRIMARY KEY,
+  nombre_cliente VARCHAR(100) NOT NULL,
+  apellido_cliente VARCHAR(100) NOT NULL,
+  telefono_cliente VARCHAR(50) NOT NULL,
+  total DECIMAL(10,2) NOT NULL,
+  estado ENUM('pendiente', 'realizada', 'cancelada') DEFAULT 'pendiente',
+  id_admin INT NULL,  -- admin que procesó la venta (si aplica)
+  fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (id_admin) REFERENCES Administradores(id_admin) ON DELETE SET NULL
+);
+
+CREATE TABLE pedido_detalle (
+  iddetalle INT AUTO_INCREMENT PRIMARY KEY,
+  idpedido INT NOT NULL,
+  idtarjeta INT NOT NULL,
+  nombre_producto VARCHAR(255) NOT NULL,
+  cantidad INT NOT NULL,
+  precio DECIMAL(10,2) NOT NULL,
+  FOREIGN KEY (idpedido) REFERENCES pedidos(idpedido) ON DELETE CASCADE,
+  FOREIGN KEY (idtarjeta) REFERENCES tarjeta(idtarjeta)
+);

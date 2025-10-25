@@ -1,73 +1,40 @@
-import React from "react";
+// src/components/BorrarTarjeta.jsx
+import React, { useContext } from "react";
+import Swal from "sweetalert2";
 import { UserContext } from "../context/UserContext";
-import Swal from 'sweetalert2'
-export default function BorrarTarjeta({ idtarjeta }) {
 
-    const eliminarTarjeta = async (idtarjeta) => {
-        const swalWithBootstrapButtons = Swal.mixin({
-            customClass: {
-                confirmButton: "btn btn-success",
-                cancelButton: "btn btn-danger"
-            },
-            buttonsStyling: false
-        });
-        swalWithBootstrapButtons.fire({
-            title: "¿Seguro que quieres eliminar esta tarjeta?",
-            text: "No podras revertir esto!",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonText: "Si, eliminar!",
-            cancelButtonText: "No, cancelar!",
-            reverseButtons: true
-        }).then(async(result) => {
-            if (result.isConfirmed) {
-                try {
-                    const res = await fetch(`http://192.168.1.4:5000/api/tarjetas/borrar/${idtarjeta}`, {
-                        method: "DELETE",
-                        credentials: "include", // 👈 importante para enviar cookies
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
-                    });
-                    if (res.ok) {
-                        Swal.fire({
-                            title: "¡Eliminada!",
-                            text: "Tarjeta eliminada",
-                            icon: "success"
-                        });
-                        window.location.reload();
-                    }
-                    if (!res.ok) throw new Error("Error al eliminar tarjeta");
+export default function BorrarTarjeta({ idtarjeta, onEliminada }) {
+  const { csrfToken } = useContext(UserContext);
 
-                } catch (err) {
-                    console.error(err);
-                    Swal.fire({
-                        icon: "info",
-                        title: "No se pudo eliminar la tarjeta ❌"
-                    });
-                }
+  const eliminarTarjeta = async (id) => {
+    const result = await Swal.fire({
+      title: "¿Seguro que quieres eliminar esta tarjeta?",
+      text: "No podrás revertirlo",
+      icon: "warning",
+      showCancelButton: true,
+    });
+    if (!result.isConfirmed) return;
 
-            } else if (
-                /* Read more about handling dismissals below */
-                result.dismiss === Swal.DismissReason.cancel
-            ) {
-                swalWithBootstrapButtons.fire({
-                    title: "Cancelado",
-                    text: "La tarjeta está a salvo :)",
-                    icon: "error"
-                });
-                return;
-            }
-        });
-    };
-    return (
-        <>
-            <input
-                type="button"
-                value="🗑️"
-                className="boton-eliminar"
-                onClick={() => eliminarTarjeta(idtarjeta)}
-            />
-        </>
-    )
+    try {
+      const token = csrfToken || sessionStorage.getItem("csrfToken") || "";
+      const res = await fetch(`http://192.168.1.4:5000/api/tarjetas/borrar/${id}`, {
+        method: "DELETE",
+        credentials: "include",
+        headers: { "CSRF-Token": token },
+      });
+
+      if (!res.ok) {
+        const d = await res.json();
+        throw new Error(d.error || "Error al eliminar");
+      }
+
+      Swal.fire("Eliminado", "Tarjeta eliminada", "success");
+      onEliminada?.(id);
+    } catch (err) {
+      console.error("eliminarTarjeta", err);
+      Swal.fire("Error", "No se pudo eliminar la tarjeta", "error");
+    }
+  };
+
+  return <button className="boton-eliminar" onClick={() => eliminarTarjeta(idtarjeta)}>🗑️</button>;
 }

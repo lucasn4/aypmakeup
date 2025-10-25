@@ -1,5 +1,6 @@
 import pool from "../config/db.js";
 import { v2 as cloudinary } from "cloudinary";
+import { validationResult } from "express-validator";
 import fs from "fs";
 
 // Config Cloudinary

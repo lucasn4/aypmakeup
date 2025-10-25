@@ -43,7 +43,6 @@ export const login = async (req, res) => {
   const { telefono, contraseña } = req.body; // lo hacemos con telefono como identificador
 
   try {
-    console.log("JWT_SECRET:", process.env.JWT_SECRET);
     const [rows] = await pool.query(
       "SELECT * FROM Administradores WHERE telefono_admin = ?",
       [telefono]
@@ -70,13 +69,12 @@ export const login = async (req, res) => {
       secure: false, // 🔒 en producción (HTTPS) → true
       sameSite: "lax", // si usas diferentes dominios: "none"
       path: "/", // ✅ asegura que esté disponible en todas las rutas
-      maxAge: 15 * 60 * 1000,
     });
 
     res.cookie("refresh_token", refreshToken, {
       httpOnly: true,
       secure: false,
-      sameSite: "strict",
+      sameSite: "lax",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
